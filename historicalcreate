@@ -1,0 +1,26 @@
+CREATE TABLE student (
+ student_id INT NOT NULL,
+ instrument VARCHAR(100) NOT NULL
+ personal_number     VARCHAR(12) DEFAULT 'UNIQUE' NOT NULL,
+ first_name  VARCHAR(100) NOT NULL,
+ last_name VARCHAR(200),
+ adress  VARCHAR(200) NOT NULL
+);
+
+ALTER TABLE student ADD CONSTRAINT PK_student PRIMARY KEY (student_id);
+
+CREATE TABLE lessons (
+lesson_id INT NOT NULL,
+price     VARCHAR(100),
+kind_of_lesson    VARCHAR(100)
+);
+
+ALTER TABLE lessons ADD CONSTRAINT PK_lessons PRIMARY KEY (lesson_id);
+
+
+CREATE TABLE student_lessons (
+ student_id INT NOT NULL,
+ lesson_id INT NOT NULL,
+);
+
+ALTER TABLE student_lessons ADD CONSTRAINT PK_student_lessons PRIMARY KEY (student_id,lesson_id);
