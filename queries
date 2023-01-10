@@ -1,0 +1,44 @@
+SELECT TO_CHAR(date_time, 'YYYY MM') AS date, 
+COUNT(type_of_lesson) FILTER (WHERE type_of_lesson = 'individual') AS individual,
+COUNT(type_of_lesson) FILTER (WHERE type_of_lesson = 'group') AS group,
+COUNT(type_of_lesson) FILTER (WHERE type_of_lesson = 'ensemble') AS ensemble,
+COUNT(lesson_id) AS total_no_lessons
+FROM lesson GROUP BY TO_CHAR(date_time, 'YYYY MM');
+
+
+--CREATE VIEW number_of_sibling AS
+SELECT COUNT(r.number_of_sibling) AS number_of_student, r.number_of_sibling
+FROM
+(
+SELECT student.student_id, COUNT(sibling.student_id) AS number_of_sibling
+FROM
+student FULL JOIN sibling ON sibling.student_id = student.student_id
+GROUP BY student.student_id
+
+) AS r
+GROUP BY r.number_of_sibling;
+ --ORDER BY r.number_of_sibling;
+
+
+
+--------------------------------------------------------------
+ 
+SELECT instructor_id, COUNT(instructor_id) AS no_of_lesson
+FROM lesson WHERE EXTRACT(MONTH FROM date_time) = 1
+GROUP BY instructor_id HAVING COUNT(instructor_id) > 1;
+ 
+-----------------------------------------------------------------
+
+
+ 
+ SELECT genre, no_of_registered_students, max_students,
+(CASE 
+	WHEN no_of_registered_students = max_students THEN 'Full booked'
+	WHEN no_of_registered_students = max_students - 1 THEN '1 seats left'
+  WHEN no_of_registered_students = max_students - 2 THEN '2 seats left'
+  ELSE 'more seat is left' 
+END), 
+date_time
+FROM ensemble
+WHERE date_trunc('week', current_date + interval '1 week') = date_trunc('week', date_time)
+GROUP BY date_time ,no_of_registered_students, max_students, genre;
